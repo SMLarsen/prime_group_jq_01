@@ -1,0 +1,25 @@
+h1 {
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+}
+
+.fruit {
+  width: 400px;
+  height: 400px
+}
+
+.fruit-store-display {
+  display: flex;
+  justify-content: space-around;
+}
+
+
+.inner-fruit-container {
+  height: 300px;
+  width: 300px;
+  background-color: rgba(128,128,128,0.9);
+  margin: 25px auto;
+}
