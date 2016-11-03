@@ -104,7 +104,8 @@ $(document).ready(function(){
         //appending bootstrap column to row
         $('.row:last').append('<div class="col-md-3 fruit"><div class="inner-fruit-container"><h3>' + array[i].toUpperCase() +
         '</h3><br /><button id=' + array[i] +
-        '>Buy</button><p>Quantity Sold: <span id="current-' + array[i] + '-quantity"></p><p>Avg. Price: <span id="avg-' + array[i] +
+        '>Buy</button><button id=' + array[i] +
+        '-sell">Sell</button><p>Quantity Sold: <span id="current-' + array[i] + '-quantity"></p><p>Avg. Price: <span id="avg-' + array[i] +
         '-price"></span></p><p>Market Price: <span id="current-' + array[i] + '-price"</div></div>');
         //add class to newly appended column
         $('.fruit:last').addClass(array[i]);
