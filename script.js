@@ -53,7 +53,6 @@ $(document).ready(function(){
 
     function buyFruit(){
       var fruit = $(this).attr("id");
-      console.log(fruit);
       getSpecificFruit(fruit).sell();
       customer.buy(getSpecificFruit(fruit).currentPrice);
       // console.log(type of customer.currentCash);
@@ -86,7 +85,7 @@ $(document).ready(function(){
           if(this.quantSold === 0 || this.totalSoldVal === 0) {
             return 0;
           }
-          return this.totalSoldVal / this.quantSold;
+          return (this.totalSoldVal / this.quantSold).toFixed(2);
         };
     }
 
@@ -106,8 +105,10 @@ $(document).ready(function(){
         $('#fruit-row:last').append('<div class="col-md-3 fruit"><div class="inner-fruit-container"><p>' + array[i].toUpperCase() +
         '</p><br /><button id=' + array[i] +
         '>Buy</button><button id=' + array[i] +
-        '-sell">Sell</button><p>Quantity Sold: <span id="current-' + array[i] + '-quantity"></p><p>Avg. Price: <span id="avg-' + array[i] +
-        '-price"></span></p><p>Market Price: <span id="current-' + array[i] + '-price"</div></div>');
+        '-sell">Sell</button>' +
+        // '<p>Quantity Sold: <span id="current-' + array[i] + '-quantity"></p>' +
+        // '<p>Avg. Price: <span id="avg-' + array[i] + '-price"></span></p>' +
+        '<p>Market Price: <span id="current-' + array[i] + '-price"</div></div>');
         //add class to newly appended column
         $('.fruit:last').addClass(array[i]);
         //apply background to column
@@ -127,10 +128,10 @@ $(document).ready(function(){
             var fruit = array[i];
             $('#inventory-container').append('<div class="row" id="inventory-row">' +
   					'<div class="col-md-2"> <p></p></div>' +
-  					'<div class="col-md-2"> <p>' + fruit.type + '</p></div>' +
-  					'<div class="col-md-2"> <p>' + fruit.quantSold + '</p></div>' +
-  					'<div class="col-md-2"> <p>' + fruit.getAvgPrice() + '</p></div>' +
-  					'<div class="col-md-2"> <p>' + fruit.totalSoldVal + '</p></div>' +
+  					'<div class="col-md-2" id="' + fruit.type + '-inventory-type"> <p>' + fruit.type + '</p></div>' +
+  					'<div class="col-md-2" id="' + fruit.type + '-inventory-quantity"> <p>' + fruit.quantSold + '</p></div>' +
+  					'<div class="col-md-2" id="' + fruit.type + '-inventory-avg-price"> <p>' + fruit.getAvgPrice() + '</p></div>' +
+  					'<div class="col-md-2" id="' + fruit.type + '-inventory-total"> <p>' + fruit.totalSoldVal + '</p></div>' +
   					'<div class="col-md-2"> <p></p></div>' +
             '</div>');
 
@@ -138,10 +139,14 @@ $(document).ready(function(){
         }
 
     function setFruitStats(fruit) {
-      $('#avg-' + fruit.type + '-price').text(fruit.getAvgPrice().toLocaleString('en', {style: 'currency', currency: 'USD'}));
+      // $('#avg-' + fruit.type + '-price').text(fruit.getAvgPrice().toLocaleString('en', {style: 'currency', currency: 'USD'}));
       $('#current-' + fruit.type + '-price').text(fruit.currentPrice.toLocaleString('en', {style: 'currency', currency: 'USD'}));
-      $('#current-' + fruit.type + '-quantity').text(fruit.quantSold);
+      // $('#current-' + fruit.type + '-quantity').text(fruit.quantSold);
       $('#available-balance').text(customer.currentCash.toLocaleString('en', {style: 'currency', currency: 'USD'}));
+
+      $('#' + fruit.type + '-inventory-quantity').text(fruit.quantSold);
+      $('#' + fruit.type + '-inventory-avg-price').text(fruit.getAvgPrice().toLocaleString('en', {style: 'currency', currency: 'USD'}));
+      $('#' + fruit.type + '-inventory-total').text(fruit.totalSoldVal.toLocaleString('en', {style: 'currency', currency: 'USD'}));
     }
 
     function getSpecificFruit (fruitType) {
