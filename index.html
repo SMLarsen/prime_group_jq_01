@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title></title>
+		<title>Fruit Stand</title>
 
 		<meta name="description" content="Webpage">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -17,9 +17,20 @@
     <header><h1>Fruit Loops Fruit Market</h1></header>
     <main>
       <h2>Total Available Cash: <span id="available-balance">$0.00</span></h2>
-      <div class="container">
-        <div class="row">
+      <div class="container" id="fruit-container">
+        <div class="row" id="fruit-row">
+        </div>
+      </div>
 
+			<h2>Fruit Inventory: <span id="current-value"></span></h2>
+      <div class="container" id="inventory-container">
+        <div class="row" id="inventory-row">
+					<div class="col-md-2"> <h3></h3></div>
+					<div class="col-md-2"> <h3>Fruit</h3></div>
+					<div class="col-md-2"> <h3>Quantity</h3></div>
+					<div class="col-md-2"> <h3>Avg. Price</h3></div>
+					<div class="col-md-2"> <h3>$ Sold</h3></div>
+					<div class="col-md-2"> <h3></h3></div>
         </div>
       </div>
     </main>

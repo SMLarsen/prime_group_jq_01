@@ -22,7 +22,7 @@ $(document).ready(function(){
 
 //---------------------------------- LOGIC -----------------------------------//
 
-    pageBuilder(fruitArray);
+    fruitBuilder(fruitArray);
     for (var i = 0; i < fruitArray.length; i++) {
         // creates fruit properties in customer object
         customer[fruitArray[i]] = 0;
@@ -33,6 +33,7 @@ $(document).ready(function(){
         // converts strings in fruitArray into objects
         fruitArray[i] = new Fruit (fruitArray[i]);
     }
+    inventoryBuilder(fruitArray);
 
       interval = setInterval(updateDom, 5000);
 
@@ -46,7 +47,7 @@ $(document).ready(function(){
       setFruitStats(fruit);
     }
 
-    $('.container').on('click', 'button', buyFruit);
+    $('#fruit-container').on('click', 'button', buyFruit);
 
 //-------------------------------- FUNCTIONS ---------------------------------//
 
@@ -74,7 +75,7 @@ $(document).ready(function(){
     // object constructor to create new fruits
     function Fruit(fruitType){
         this.type = fruitType;
-        this.currentPrice = Number(randomNumber(.5, 9.99).toFixed(2));
+        this.currentPrice = Number(randomNumber(0.5, 9.99).toFixed(2));
         this.quantSold = 0;
         this.totalSoldVal = 0;
         this.sell = function () {
@@ -99,11 +100,11 @@ $(document).ready(function(){
     }
 
     //builds each fruit item in HTML
-    function pageBuilder(array) {
+    function fruitBuilder(array) {
       for (var i = 0; i < array.length; i++) {
-        //appending bootstrap column to row
-        $('.row:last').append('<div class="col-md-3 fruit"><div class="inner-fruit-container"><h3>' + array[i].toUpperCase() +
-        '</h3><br /><button id=' + array[i] +
+        //appending bootstrap column to fruit-fruit-row
+        $('#fruit-row:last').append('<div class="col-md-3 fruit"><div class="inner-fruit-container"><p>' + array[i].toUpperCase() +
+        '</p><br /><button id=' + array[i] +
         '>Buy</button><button id=' + array[i] +
         '-sell">Sell</button><p>Quantity Sold: <span id="current-' + array[i] + '-quantity"></p><p>Avg. Price: <span id="avg-' + array[i] +
         '-price"></span></p><p>Market Price: <span id="current-' + array[i] + '-price"</div></div>');
@@ -113,12 +114,28 @@ $(document).ready(function(){
         $('.fruit:last').css({
                 'background': 'url(img/' + array[i] + '.jpg) no-repeat center center fixed', '-webkit-background-size': 'cover', '-moz-background-size': 'cover', '-o-background-size': 'cover','background-size': 'cover', 'height': '400px'});
 
-        //if 4 columns have been displayed, create new row to append to
-        if ((i + 1) % 4 == 0) {
-          $('.container').append('<div class="row"></div>');
+        //if 4 columns have been displayed, create new fruit-fruit-row to append to
+        if ((i + 1) % 4 === 0) {
+          $('#fruit-container').append('<div class="fruit-row"></div>');
         }
       }
     }
+
+        //builds each fruit item in HTML
+        function inventoryBuilder(array) {
+          for (var i = 0; i < array.length; i++) {
+            var fruit = array[i];
+            $('#inventory-container').append('<div class="row" id="inventory-row">' +
+  					'<div class="col-md-2"> <p></p></div>' +
+  					'<div class="col-md-2"> <p>' + fruit.type + '</p></div>' +
+  					'<div class="col-md-2"> <p>' + fruit.quantSold + '</p></div>' +
+  					'<div class="col-md-2"> <p>' + fruit.getAvgPrice() + '</p></div>' +
+  					'<div class="col-md-2"> <p>' + fruit.totalSoldVal + '</p></div>' +
+  					'<div class="col-md-2"> <p></p></div>' +
+            '</div>');
+
+          }
+        }
 
     function setFruitStats(fruit) {
       $('#avg-' + fruit.type + '-price').text(fruit.getAvgPrice().toLocaleString('en', {style: 'currency', currency: 'USD'}));
