@@ -5,7 +5,8 @@ $(document).ready(function(){
     var fruitArray = ["orange", "apple", "banana", "pear"];
     var interval;
     var intervalCounter = 0;
-    var intervalLimit = 5;
+    var intervalLimit = 60;
+    var intervalLength = 15000;
 
     var customer = {
         initialCash: 100,
@@ -36,7 +37,7 @@ $(document).ready(function(){
 
     inventoryBuilder(fruitArray);
 
-    interval = setInterval(updateDom, 5000);
+    interval = setInterval(updateDom, intervalLength);
 
     for (var i = 0; i < fruitArray.length; i++) {
       var fruit = fruitArray[i];
@@ -117,10 +118,10 @@ $(document).ready(function(){
     function fruitBuilder(array) {
       for (var i = 0; i < array.length; i++) {
         //appending bootstrap column to fruit-fruit-row
-        $('#fruit-row:last').append('<div class="col-md-3 fruit"><div class="inner-fruit-container"><p>' + array[i].toUpperCase() +
+        $('#fruit-row:last').append('<div class="col-md-3 fruit"><div class="inner-fruit-container"><p class="fruit-name">' + array[i].toUpperCase() +
         '</p><br />' +
-        '<button class="buy" id=' + array[i] + '>Buy</button>' +
-        '<button class="sell" id=' + array[i] + '>Sell</button>' +
+        '<div class="form-group"><button class="buy btn btn-primary btn-lg" id=' + array[i] + '>Buy</button></div>' +
+        '<div class="form-group"><button class="sell btn btn-secondary btn-lg" id=' + array[i] + '>Sell</button></div>' +
         // '<p>Quantity Sold: <span id="current-' + array[i] + '-quantity"></p>' +
         // '<p>Avg. Price: <span id="avg-' + array[i] + '-price"></span></p>' +
         '<p>Market Price: <span id="current-' + array[i] + '-price"</div></div>');

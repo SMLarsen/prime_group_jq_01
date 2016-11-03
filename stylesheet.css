@@ -11,7 +11,7 @@ main h2 {
 .inner-fruit-container {
   height: 200px;
   width: 75%;
-  background-color: rgba(128,128,128,0.9);
+  background-color: rgba(128,128,128,0.5);
   margin: 30% auto;
   display: flex;
   flex-direction: column;
@@ -19,9 +19,14 @@ main h2 {
   align-items: center;
 }
 
-.inner-fruit-container button {
+.fruit-name {
+  color: white;
+  font-weight: bold;
+  font-size: 1.15em;
+}
+/*.inner-fruit-container button {
   background-color: black;
   border: 1px solid white;
   color: white;
   margin: 0 auto;
-}
+}*/
