@@ -54,7 +54,8 @@ $(document).ready(function(){
       var fruit = $(this).attr("id");
       console.log(fruit);
       getSpecificFruit(fruit).sell();
-      customer.buy();
+      customer.buy(getSpecificFruit(fruit).currentPrice);
+      // console.log(type of customer.currentCash);
       setFruitStats(getSpecificFruit(fruit));
     }
 
@@ -119,9 +120,10 @@ $(document).ready(function(){
     }
 
     function setFruitStats(fruit) {
-      $('#avg-' + fruit.type + '-price').text(fruit.getAvgPrice());
-      $('#current-' + fruit.type + '-price').text(fruit.currentPrice);
+      $('#avg-' + fruit.type + '-price').text(fruit.getAvgPrice().toLocaleString('en', {style: 'currency', currency: 'USD'}));
+      $('#current-' + fruit.type + '-price').text(fruit.currentPrice.toLocaleString('en', {style: 'currency', currency: 'USD'}));
       $('#current-' + fruit.type + '-quantity').text(fruit.quantSold);
+      $('#available-balance').text(customer.currentCash.toLocaleString('en', {style: 'currency', currency: 'USD'}));
     }
 
     function getSpecificFruit (fruitType) {
