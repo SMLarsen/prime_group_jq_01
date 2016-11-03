@@ -5,8 +5,8 @@ $(document).ready(function(){
     var fruitArray = ["orange", "apple", "banana", "pear"];
     var interval;
     var intervalCounter = 0;
-    var intervalLimit = 60;
-    var intervalLength = 15000;
+    var intervalLimit = 2;
+    var intervalLength = 5000;
 
     var customer = {
         initialCash: 100,
@@ -43,6 +43,8 @@ $(document).ready(function(){
       var fruit = fruitArray[i];
       setFruitStats(fruit);
     }
+
+    sellOut();
 
     $('#fruit-container').on('click', '.buy', buyFruit);
 
@@ -163,6 +165,17 @@ $(document).ready(function(){
       $('#' + fruit.type + '-inventory-quantity').text(fruit.quantSold);
       $('#' + fruit.type + '-inventory-avg-price').text(fruit.getAvgPrice().toLocaleString('en', {style: 'currency', currency: 'USD'}));
       $('#' + fruit.type + '-inventory-total').text(fruit.totalSoldVal.toLocaleString('en', {style: 'currency', currency: 'USD'}));
+    }
+
+    function sellOut() {
+      for (var i = 0; i < fruitArray.length; i++) {
+        if (fruitArray[i] > 0) {
+          customer.currentCash = fruitArray[i].quantSold * currentPrice;
+          fruitArray[i].getAvgPrice = fruitArray[i].getAvgPrice();
+          fruitArray[i].quantSold = 0;
+        }
+      }
+      setFruitStats(fruit);
     }
 
     function getSpecificFruit (fruitType) {
