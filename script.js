@@ -2,7 +2,7 @@ $(document).ready(function(){
 
 //----------------------------- GLOBAL VARIABLS ------------------------------//
 
-    var fruitArray = ["orange", "apple", "banana", "grape"];
+    var fruitArray = ["orange", "apple", "banana", "pear"];
 
     var customer = {
         initialCash: 100,
@@ -14,6 +14,8 @@ $(document).ready(function(){
             this.currentCash += price;
         },
     };
+
+    var currentFruit = null;
 
 //---------------------------------- LOGIC -----------------------------------//
 
@@ -28,7 +30,9 @@ $(document).ready(function(){
         fruitArray[i] = new Fruit (fruitArray[i]);
     }
 
-    setInterval(setRandPrices , 15000);
+    setInterval(setRandPrices, 15000);
+
+
 
 //-------------------------------- FUNCTIONS ---------------------------------//
 
@@ -41,6 +45,9 @@ $(document).ready(function(){
         this.sell = function () {
             this.totalSoldVal += this.currentPrice;
             this.quantSold++;
+        };
+        this.getAvgPrice = function () {
+            return this.totalSoldVal / this.quantSold;
         };
     }
 
@@ -55,11 +62,11 @@ $(document).ready(function(){
 
     // randomly generates a new price for each fruit
     function getPrice(startPrice) {
-      var newPrice = 0;
-      newPrice = randomNumber(startPrice - 0.5, startPrice + 0.5).toFixed(2);
-      newPrice = Math.min(newPrice, 9.99);
-      newPrice = Math.max(newPrice, 0.5);
-      return newPrice;
+        var newPrice = 0;
+        newPrice = randomNumber(startPrice - 0.5, startPrice + 0.5).toFixed(2);
+        newPrice = Math.min(newPrice, 9.99);
+        newPrice = Math.max(newPrice, 0.5);
+        return newPrice;
     }
 
     //builds each fruit item in HTML
@@ -72,6 +79,16 @@ $(document).ready(function(){
 		$('.fruit:last').css({
             'background': 'url(img/' + fruit + '.jpg) no-repeat center center fixed', '-webkit-background-size': 'cover', '-moz-background-size': 'cover', '-o-background-size': 'cover','background-size': 'cover'});
 	}
+
+    function getSpecificFruit (fruitType) {
+        for (var i = 0; i < fruitArray.length; i++) {
+            if (fruitArray[i].type === fruitType){
+                return fruitArray[i];
+            } else {
+                alert("Not a valid fruit type");
+            }
+        }
+    }
 
     // generic random number generator
     function randomNumber(min, max) {
