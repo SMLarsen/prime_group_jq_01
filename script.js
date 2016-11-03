@@ -21,6 +21,7 @@ $(document).ready(function(){
     var currentFruit = null;
 
 //---------------------------------- LOGIC -----------------------------------//
+
     pageBuilder(fruitArray);
     for (var i = 0; i < fruitArray.length; i++) {
         // creates fruit properties in customer object
@@ -33,7 +34,7 @@ $(document).ready(function(){
         fruitArray[i] = new Fruit (fruitArray[i]);
     }
 
-      interval = setInterval(updateDom, 1000);
+      interval = setInterval(updateDom, 5000);
 
     // interval = setInterval(updateDom, 3000);
 
@@ -43,15 +44,25 @@ $(document).ready(function(){
     for (var i = 0; i < fruitArray.length; i++) {
       var fruit = fruitArray[i];
       setFruitStats(fruit);
-
-      // fruitArray[i]
     }
 
-//-------------------------------- FUNCTIONS ---------------------------------//
-    function updateDom(){
+    $('.container').on('click', 'button', buyFruit);
 
+//-------------------------------- FUNCTIONS ---------------------------------//
+
+    function buyFruit(){
+      var fruit = $(this).attr("id");
+      console.log(fruit);
+      getSpecificFruit(fruit).sell();
+      customer.buy();
+      setFruitStats(getSpecificFruit(fruit));
+    }
+
+    function updateDom(){
       for (var i = 0; i < fruitArray.length; i++) {
           fruitArray[i].currentPrice = getPrice(fruitArray[i].currentPrice);
+          var fruit = fruitArray[i];
+          setFruitStats(fruit);
       }
       if (intervalCounter >= intervalLimit) {
         clearInterval(interval);
@@ -59,6 +70,7 @@ $(document).ready(function(){
       console.log(fruitArray);
       intervalCounter++;
     }
+
     // object constructor to create new fruits
     function Fruit(fruitType){
         this.type = fruitType;
@@ -76,10 +88,6 @@ $(document).ready(function(){
           return this.totalSoldVal / this.quantSold;
         };
     }
-
-    // incomplete - will iterate thru every fruit with getPrice
-    // may not need - getPrice function may replace this
-
 
     // randomly generates a new price for each fruit
     function getPrice(startPrice) {
