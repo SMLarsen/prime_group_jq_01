@@ -42,6 +42,9 @@ $(document).ready(function(){
             this.totalSoldVal += this.currentPrice;
             this.quantSold++;
         };
+        this.getAvgPrice = function () {
+            return this.totalSoldVal / this.quantSold;
+        };
     }
 
     // incomplete - will iterate thru every fruit with getPrice
@@ -55,11 +58,11 @@ $(document).ready(function(){
 
     // randomly generates a new price for each fruit
     function getPrice(startPrice) {
-      var newPrice = 0;
-      newPrice = randomNumber(startPrice - 0.5, startPrice + 0.5).toFixed(2);
-      newPrice = Math.min(newPrice, 9.99);
-      newPrice = Math.max(newPrice, 0.5);
-      return newPrice;
+        var newPrice = 0;
+        newPrice = randomNumber(startPrice - 0.5, startPrice + 0.5).toFixed(2);
+        newPrice = Math.min(newPrice, 9.99);
+        newPrice = Math.max(newPrice, 0.5);
+        return newPrice;
     }
 
     //builds each fruit item in HTML
