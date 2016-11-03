@@ -33,21 +33,20 @@ $(document).ready(function(){
         // converts strings in fruitArray into objects
         fruitArray[i] = new Fruit (fruitArray[i]);
     }
+
     inventoryBuilder(fruitArray);
 
-      interval = setInterval(updateDom, 5000);
-
-    // interval = setInterval(updateDom, 3000);
-
-    // console.log('Initial values:');
-    // console.log(fruitArray);
+    interval = setInterval(updateDom, 5000);
 
     for (var i = 0; i < fruitArray.length; i++) {
       var fruit = fruitArray[i];
       setFruitStats(fruit);
     }
 
-    $('#fruit-container').on('click', 'button', buyFruit);
+    $('#fruit-container').on('click', '.buy', buyFruit);
+
+    $('#fruit-container').on('click', '.sell', sellFruit);
+
 
 //-------------------------------- FUNCTIONS ---------------------------------//
 
@@ -55,6 +54,14 @@ $(document).ready(function(){
       var fruit = $(this).attr("id");
       getSpecificFruit(fruit).sell();
       customer.buy(getSpecificFruit(fruit).currentPrice);
+      // console.log(type of customer.currentCash);
+      setFruitStats(getSpecificFruit(fruit));
+    }
+
+    function sellFruit(){
+      var fruit = $(this).attr("id");
+      getSpecificFruit(fruit).buy();
+      customer.sell(getSpecificFruit(fruit).currentPrice);
       // console.log(type of customer.currentCash);
       setFruitStats(getSpecificFruit(fruit));
     }
@@ -77,6 +84,14 @@ $(document).ready(function(){
         this.currentPrice = Number(randomNumber(0.5, 9.99).toFixed(2));
         this.quantSold = 0;
         this.totalSoldVal = 0;
+        this.buy = function() {
+          if (this.quantSold < 1) {
+            alert('Not enough inventory');
+          } else {
+            this.totalSoldVal -= this.currentPrice;
+            this.quantSold--;
+          }
+        };
         this.sell = function () {
             this.totalSoldVal += this.currentPrice;
             this.quantSold++;
@@ -103,9 +118,9 @@ $(document).ready(function(){
       for (var i = 0; i < array.length; i++) {
         //appending bootstrap column to fruit-fruit-row
         $('#fruit-row:last').append('<div class="col-md-3 fruit"><div class="inner-fruit-container"><p>' + array[i].toUpperCase() +
-        '</p><br /><button id=' + array[i] +
-        '>Buy</button><button id=' + array[i] +
-        '-sell">Sell</button>' +
+        '</p><br />' +
+        '<button class="buy" id=' + array[i] + '>Buy</button>' +
+        '<button class="sell" id=' + array[i] + '>Sell</button>' +
         // '<p>Quantity Sold: <span id="current-' + array[i] + '-quantity"></p>' +
         // '<p>Avg. Price: <span id="avg-' + array[i] + '-price"></span></p>' +
         '<p>Market Price: <span id="current-' + array[i] + '-price"</div></div>');
