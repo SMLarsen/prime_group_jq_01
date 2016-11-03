@@ -67,7 +67,6 @@ $(document).ready(function(){
       if (intervalCounter >= intervalLimit) {
         clearInterval(interval);
       }
-      console.log(fruitArray);
       intervalCounter++;
     }
 
@@ -104,7 +103,7 @@ $(document).ready(function(){
         //appending bootstrap column to row
         $('.row:last').append('<div class="col-md-3 fruit"><div class="inner-fruit-container"><h3>' + array[i].toUpperCase() +
         '</h3><br /><button id=' + array[i] +
-        '>Buy</button><p>Avg. Price: <span id="avg-' + array[i] +
+        '>Buy</button><p>Quantity Sold: <span id="current-' + array[i] + '-quantity"></p><p>Avg. Price: <span id="avg-' + array[i] +
         '-price"></span></p><p>Market Price: <span id="current-' + array[i] + '-price"</div></div>');
         //add class to newly appended column
         $('.fruit:last').addClass(array[i]);
@@ -122,15 +121,13 @@ $(document).ready(function(){
     function setFruitStats(fruit) {
       $('#avg-' + fruit.type + '-price').text(fruit.getAvgPrice());
       $('#current-' + fruit.type + '-price').text(fruit.currentPrice);
+      $('#current-' + fruit.type + '-quantity').text(fruit.quantSold);
     }
 
     function getSpecificFruit (fruitType) {
         for (var i = 0; i < fruitArray.length; i++) {
             if (fruitArray[i].type === fruitType){
                 return fruitArray[i];
-            } else {
-              return false;
-                alert("Not a valid fruit type");
             }
         }
     }
