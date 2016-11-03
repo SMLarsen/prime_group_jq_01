@@ -3,6 +3,9 @@ $(document).ready(function(){
 //----------------------------- GLOBAL VARIABLS ------------------------------//
 
     var fruitArray = ["orange", "apple", "banana", "pear"];
+    var interval;
+    var intervalCounter = 0;
+    var intervalLimit = 5;
 
     var customer = {
         initialCash: 100,
@@ -30,18 +33,32 @@ $(document).ready(function(){
         fruitArray[i] = new Fruit (fruitArray[i]);
     }
 
-    setInterval(setRandPrices, 15000);
+      interval = setInterval(updateDom, 1000);
+
+    // interval = setInterval(updateDom, 3000);
+
+    // console.log('Initial values:');
+    // console.log(fruitArray);
 
     for (var i = 0; i < fruitArray.length; i++) {
       var fruit = fruitArray[i];
-      $('#avg-' + fruit.type + '-price').text(fruit.getAvgPrice());
-      $('#current-' + fruit.type + '-price').text(fruit.currentPrice);
+      setFruitStats(fruit);
 
       // fruitArray[i]
     }
 
 //-------------------------------- FUNCTIONS ---------------------------------//
+    function updateDom(){
 
+      for (var i = 0; i < fruitArray.length; i++) {
+          fruitArray[i].currentPrice = getPrice(fruitArray[i].currentPrice);
+      }
+      if (intervalCounter >= intervalLimit) {
+        clearInterval(interval);
+      }
+      console.log(fruitArray);
+      intervalCounter++;
+    }
     // object constructor to create new fruits
     function Fruit(fruitType){
         this.type = fruitType;
@@ -62,12 +79,7 @@ $(document).ready(function(){
 
     // incomplete - will iterate thru every fruit with getPrice
     // may not need - getPrice function may replace this
-    function setRandPrices() {
-        for (var i = 0; i < fruitArray.length; i++) {
-            randomNumber(.5, 9.99).toFixed(2);
-            fruitArray[i];
-        }
-    }
+
 
     // randomly generates a new price for each fruit
     function getPrice(startPrice) {
@@ -99,6 +111,11 @@ $(document).ready(function(){
       }
     }
 
+    function setFruitStats(fruit) {
+      $('#avg-' + fruit.type + '-price').text(fruit.getAvgPrice());
+      $('#current-' + fruit.type + '-price').text(fruit.currentPrice);
+    }
+
     function getSpecificFruit (fruitType) {
         for (var i = 0; i < fruitArray.length; i++) {
             if (fruitArray[i].type === fruitType){
@@ -114,5 +131,7 @@ $(document).ready(function(){
     function randomNumber(min, max) {
         return Math.random() * (max - min) + min;
     }
+
+
 
 });
