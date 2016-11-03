@@ -1,25 +1,27 @@
-h1 {
+header {
   text-align: center;
+  /*color: white;*/
 }
 
-h2 {
+main h2 {
   text-align: center;
+  /*color: white;*/
 }
-
-.fruit {
-  width: 400px;
-  height: 400px
-}
-
-.fruit-store-display {
-  display: flex;
-  justify-content: space-around;
-}
-
 
 .inner-fruit-container {
-  height: 300px;
-  width: 300px;
+  height: 200px;
+  width: 75%;
   background-color: rgba(128,128,128,0.9);
-  margin: 25px auto;
+  margin: 30% auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.inner-fruit-container button {
+  background-color: black;
+  border: 1px solid white;
+  color: white;
+  margin: 0 auto;
 }

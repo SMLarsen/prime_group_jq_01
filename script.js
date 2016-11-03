@@ -18,13 +18,13 @@ $(document).ready(function(){
     var currentFruit = null;
 
 //---------------------------------- LOGIC -----------------------------------//
-
+    pageBuilder(fruitArray);
     for (var i = 0; i < fruitArray.length; i++) {
         // creates fruit properties in customer object
         customer[fruitArray[i]] = 0;
 
         // calls funtion that creates fruit items on index.html
-        fruitDisplayBuilder(fruitArray[i]);
+        // fruitDisplayBuilder(fruitArray[i]);
 
         // converts strings in fruitArray into objects
         fruitArray[i] = new Fruit (fruitArray[i]);
@@ -32,14 +32,20 @@ $(document).ready(function(){
 
     setInterval(setRandPrices, 15000);
 
+    for (var i = 0; i < fruitArray.length; i++) {
+      var fruit = fruitArray[i];
+      $('#avg-' + fruit.type + '-price').text(fruit.getAvgPrice());
+      $('#current-' + fruit.type + '-price').text(fruit.currentPrice);
 
+      // fruitArray[i]
+    }
 
 //-------------------------------- FUNCTIONS ---------------------------------//
 
     // object constructor to create new fruits
     function Fruit(fruitType){
         this.type = fruitType;
-        this.currentPrice = randomNumber(.5, 9.99).toFixed(2);
+        this.currentPrice = Number(randomNumber(.5, 9.99).toFixed(2));
         this.quantSold = 0;
         this.totalSoldVal = 0;
         this.sell = function () {
@@ -47,7 +53,10 @@ $(document).ready(function(){
             this.quantSold++;
         };
         this.getAvgPrice = function () {
-            return this.totalSoldVal / this.quantSold;
+          if(this.quantSold === 0 || this.totalSoldVal === 0) {
+            return 0;
+          }
+          return this.totalSoldVal / this.quantSold;
         };
     }
 
@@ -70,21 +79,32 @@ $(document).ready(function(){
     }
 
     //builds each fruit item in HTML
-    function fruitDisplayBuilder(fruit) {
-		$('.fruit-store-display').append(
-            '<div class="fruit"><div class="inner-fruit-container"><button>Buy</button><p>Avg. Price: <span id="avg-' + fruit + '-price"></span></p></div></div>');
+    function pageBuilder(array) {
+      for (var i = 0; i < array.length; i++) {
+        //appending bootstrap column to row
+        $('.row:last').append('<div class="col-md-3 fruit"><div class="inner-fruit-container"><h3>' + array[i].toUpperCase() +
+        '</h3><br /><button id=' + array[i] +
+        '>Buy</button><p>Avg. Price: <span id="avg-' + array[i] +
+        '-price"></span></p><p>Market Price: <span id="current-' + array[i] + '-price"</div></div>');
+        //add class to newly appended column
+        $('.fruit:last').addClass(array[i]);
+        //apply background to column
+        $('.fruit:last').css({
+                'background': 'url(img/' + array[i] + '.jpg) no-repeat center center fixed', '-webkit-background-size': 'cover', '-moz-background-size': 'cover', '-o-background-size': 'cover','background-size': 'cover', 'height': '400px'});
 
-		$('.fruit:last').addClass(fruit);
-
-		$('.fruit:last').css({
-            'background': 'url(img/' + fruit + '.jpg) no-repeat center center fixed', '-webkit-background-size': 'cover', '-moz-background-size': 'cover', '-o-background-size': 'cover','background-size': 'cover'});
-	}
+        //if 4 columns have been displayed, create new row to append to
+        if ((i + 1) % 4 == 0) {
+          $('.container').append('<div class="row"></div>');
+        }
+      }
+    }
 
     function getSpecificFruit (fruitType) {
         for (var i = 0; i < fruitArray.length; i++) {
             if (fruitArray[i].type === fruitType){
                 return fruitArray[i];
             } else {
+              return false;
                 alert("Not a valid fruit type");
             }
         }
@@ -92,7 +112,7 @@ $(document).ready(function(){
 
     // generic random number generator
     function randomNumber(min, max) {
-        return Math.floor(Math.random() * (1 + max - min) + min);
+        return Math.random() * (max - min) + min;
     }
 
 });
