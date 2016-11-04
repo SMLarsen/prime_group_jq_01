@@ -3,22 +3,12 @@ $(document).ready(function(){
 //----------------------------- GLOBAL VARIABLS ------------------------------//
 
     var fruitArray = ["orange", "apple", "banana", "pear"];
+    var initialCash = 100;
     var interval;
     var intervalCounter = 0;
     var intervalLimit = 2;
     var intervalLength = 5000;
-
-    var customer = {
-        initialCash: 100,
-        currentCash: 100,
-        buy: function (price) {
-            this.currentCash -= price;
-        },
-        sell: function (price) {
-            this.currentCash += price;
-        },
-    };
-
+    var customer = new Customer(initialCash);
     var currentFruit = null;
 
 //---------------------------------- LOGIC -----------------------------------//
@@ -41,70 +31,74 @@ $(document).ready(function(){
 
     for (var i = 0; i < fruitArray.length; i++) {
       var fruit = fruitArray[i];
-      setFruitStats(fruit);
+      setStats(fruit);
     }
 
-    sellOut();
+    //---------------------------------- EVENT LISTENERS -----------------------------------//
 
     $('#fruit-container').on('click', '.buy', buyFruit);
 
     $('#fruit-container').on('click', '.sell', sellFruit);
 
+    $('#liquidate-button').on('click', liquidate);
 
 //-------------------------------- FUNCTIONS ---------------------------------//
 
+// object constructor to create new fruits
+function Customer(cash) {
+    this.initialCash = cash;
+    this.currentCash = cash;
+    this.buy = function (fruit, price) {
+        this.currentCash -= price;        console.log(this);
+        this[fruit]++;
+    };
+    this.sell = function (fruit, price) {
+        this.currentCash += price;
+        this[fruit]--;
+    };
+  }
+
+// object constructor to create new fruits
+function Fruit(fruitType) {
+    this.type = fruitType;
+    this.currentPrice = Number(randomNumber(0.5, 9.99).toFixed(2));
+    this.totalSold = 0;
+    this.totalSoldVal = 0;
+    this.sell = function () {
+        this.totalSoldVal += this.currentPrice;
+        this.totalSold++;
+    };
+    this.getAvgPrice = function () {
+      if(this.totalSold === 0 || this.totalSoldVal === 0) {
+        return 0;
+      }
+      return (this.totalSoldVal / this.totalSold).toFixed(2);
+    };
+}
+
     function buyFruit(){
       var fruit = $(this).attr("id");
-      getSpecificFruit(fruit).sell();
-      customer.buy(getSpecificFruit(fruit).currentPrice);
-      // console.log(type of customer.currentCash);
-      setFruitStats(getSpecificFruit(fruit));
+      getFruit(fruit).sell();
+      customer.buy(fruit, getFruit(fruit).currentPrice);
+      setStats(getFruit(fruit));
     }
 
     function sellFruit(){
       var fruit = $(this).attr("id");
-      getSpecificFruit(fruit).buy();
-      customer.sell(getSpecificFruit(fruit).currentPrice);
-      // console.log(type of customer.currentCash);
-      setFruitStats(getSpecificFruit(fruit));
+      customer.sell(fruit, getFruit(fruit).currentPrice);
+      setStats(getFruit(fruit));
     }
 
     function updateDom(){
       for (var i = 0; i < fruitArray.length; i++) {
           fruitArray[i].currentPrice = getPrice(fruitArray[i].currentPrice);
           var fruit = fruitArray[i];
-          setFruitStats(fruit);
+          setStats(fruit);
       }
       if (intervalCounter >= intervalLimit) {
         clearInterval(interval);
       }
       intervalCounter++;
-    }
-
-    // object constructor to create new fruits
-    function Fruit(fruitType){
-        this.type = fruitType;
-        this.currentPrice = Number(randomNumber(0.5, 9.99).toFixed(2));
-        this.quantSold = 0;
-        this.totalSoldVal = 0;
-        this.buy = function() {
-          if (this.quantSold < 1) {
-            alert('Not enough inventory');
-          } else {
-            this.totalSoldVal -= this.currentPrice;
-            this.quantSold--;
-          }
-        };
-        this.sell = function () {
-            this.totalSoldVal += this.currentPrice;
-            this.quantSold++;
-        };
-        this.getAvgPrice = function () {
-          if(this.quantSold === 0 || this.totalSoldVal === 0) {
-            return 0;
-          }
-          return (this.totalSoldVal / this.quantSold).toFixed(2);
-        };
     }
 
     // randomly generates a new price for each fruit
@@ -140,45 +134,44 @@ $(document).ready(function(){
       }
     }
 
-        //builds each fruit item in HTML
-        function inventoryBuilder(array) {
-          for (var i = 0; i < array.length; i++) {
-            var fruit = array[i];
-            $('#inventory-container').append('<div class="row" id="inventory-row">' +
-  					'<div class="col-md-2"> <p></p></div>' +
-  					'<div class="col-md-2" id="' + fruit.type + '-inventory-type"> <p>' + fruit.type + '</p></div>' +
-  					'<div class="col-md-2" id="' + fruit.type + '-inventory-quantity"> <p>' + fruit.quantSold + '</p></div>' +
-  					'<div class="col-md-2" id="' + fruit.type + '-inventory-avg-price"> <p>' + fruit.getAvgPrice() + '</p></div>' +
-  					'<div class="col-md-2" id="' + fruit.type + '-inventory-total"> <p>' + fruit.totalSoldVal + '</p></div>' +
-  					'<div class="col-md-2"> <p></p></div>' +
-            '</div>');
+    //builds each fruit item in HTML
+    function inventoryBuilder(array) {
+      for (var i = 0; i < array.length; i++) {
+        var fruit = array[i];
+        $('#inventory-container').append('<div class="row" id="inventory-row">' +
+				'<div class="col-md-2"> <p></p></div>' +
+				'<div class="col-md-2" id="' + fruit.type + '-inventory-type"> <p>' + fruit.type + '</p></div>' +
+				'<div class="col-md-2 quantity" id="' + fruit.type + '-inventory-quantity"> <p>' + customer[fruit] + '</p></div>' +
+				'<div class="col-md-2 currency" id="' + fruit.type + '-inventory-avg-price"> <p>' + fruit.getAvgPrice() + '</p></div>' +
+				'<div class="col-md-2 currency" id="' + fruit.type + '-inventory-total"> <p>' + fruit.totalSoldVal + '</p></div>' +
+				'<div class="col-md-2"> <p></p></div>' +
+        '</div>');
 
-          }
-        }
+      }
+    }
 
-    function setFruitStats(fruit) {
-      // $('#avg-' + fruit.type + '-price').text(fruit.getAvgPrice().toLocaleString('en', {style: 'currency', currency: 'USD'}));
+    function setStats(fruit) {
       $('#current-' + fruit.type + '-price').text(fruit.currentPrice.toLocaleString('en', {style: 'currency', currency: 'USD'}));
-      // $('#current-' + fruit.type + '-quantity').text(fruit.quantSold);
+
       $('#available-balance').text(customer.currentCash.toLocaleString('en', {style: 'currency', currency: 'USD'}));
 
-      $('#' + fruit.type + '-inventory-quantity').text(fruit.quantSold);
+      $('#' + fruit.type + '-inventory-quantity').text(customer[fruit.type]);
       $('#' + fruit.type + '-inventory-avg-price').text(fruit.getAvgPrice().toLocaleString('en', {style: 'currency', currency: 'USD'}));
-      $('#' + fruit.type + '-inventory-total').text(fruit.totalSoldVal.toLocaleString('en', {style: 'currency', currency: 'USD'}));
+      $('#' + fruit.type + '-inventory-total').text((customer[fruit.type] * fruit.getAvgPrice()).toLocaleString('en', {style: 'currency', currency: 'USD'}));
     }
 
-    function sellOut() {
+    function liquidate() {
       for (var i = 0; i < fruitArray.length; i++) {
-        if (fruitArray[i] > 0) {
-          customer.currentCash = fruitArray[i].quantSold * currentPrice;
-          fruitArray[i].getAvgPrice = fruitArray[i].getAvgPrice();
-          fruitArray[i].quantSold = 0;
+        if (fruitArray[i].totalSold > 0) {
+          customer.currentCash = fruitArray[i].totalSold * fruitArray[i].currentPrice;
+          fruitArray[i].getAvgPrice = Number(fruitArray[i].getAvgPrice());
+          fruitArray[i].totalSold = 0;
+          setStats(fruitArray[i]);
         }
       }
-      setFruitStats(fruit);
     }
 
-    function getSpecificFruit (fruitType) {
+    function getFruit (fruitType) {
         for (var i = 0; i < fruitArray.length; i++) {
             if (fruitArray[i].type === fruitType){
                 return fruitArray[i];
@@ -190,7 +183,5 @@ $(document).ready(function(){
     function randomNumber(min, max) {
         return Math.random() * (max - min) + min;
     }
-
-
 
 });
