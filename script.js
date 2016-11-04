@@ -6,8 +6,8 @@ $(document).ready(function(){
     var initialCash = 100;
     var interval;
     var intervalCounter = 0;
-    var intervalLimit = 2;
-    var intervalLength = 5000;
+    var intervalLimit = 12;
+    var intervalLength = 3000;
     var customer = new Customer(initialCash);
     var currentFruit = null;
 
@@ -17,9 +17,6 @@ $(document).ready(function(){
     for (var i = 0; i < fruitArray.length; i++) {
         // creates fruit properties in customer object
         customer[fruitArray[i]] = 0;
-
-        // calls funtion that creates fruit items on index.html
-        // fruitDisplayBuilder(fruitArray[i]);
 
         // converts strings in fruitArray into objects
         fruitArray[i] = new Fruit (fruitArray[i]);
@@ -49,7 +46,7 @@ function Customer(cash) {
     this.initialCash = cash;
     this.currentCash = cash;
     this.buy = function (fruit, price) {
-        this.currentCash -= price;        console.log(this);
+        this.currentCash -= price;
         this[fruit]++;
     };
     this.sell = function (fruit, price) {
@@ -118,12 +115,8 @@ function Fruit(fruitType) {
         '</p><br />' +
         '<div class="form-group"><button class="buy btn btn-primary btn-lg" id=' + array[i] + '>Buy</button></div>' +
         '<div class="form-group"><button class="sell btn btn-secondary btn-lg" id=' + array[i] + '>Sell</button></div>' +
-        // '<p>Quantity Sold: <span id="current-' + array[i] + '-quantity"></p>' +
-        // '<p>Avg. Price: <span id="avg-' + array[i] + '-price"></span></p>' +
         '<p>Market Price: <span id="current-' + array[i] + '-price"</div></div>');
-        //add class to newly appended column
         $('.fruit:last').addClass(array[i]);
-        //apply background to column
         $('.fruit:last').css({
                 'background': 'url(img/' + array[i] + '.jpg) no-repeat center center fixed', '-webkit-background-size': 'cover', '-moz-background-size': 'cover', '-o-background-size': 'cover','background-size': 'cover', 'height': '400px'});
 
@@ -166,8 +159,13 @@ function Fruit(fruitType) {
           customer.currentCash += customer[fruitArray[i].type] * fruitArray[i].currentPrice;
           customer[fruitArray[i].type] = 0;
           setStats(fruitArray[i]);
+          displayNet();
         }
       }
+    }
+
+    function displayNet() {
+      $("#net-result").text(', Net Proceeds: ' + (customer.currentCash - customer.initialCash).toLocaleString('en', {style: 'currency', currency: 'USD'}));
     }
 
     function getFruit (fruitType) {
