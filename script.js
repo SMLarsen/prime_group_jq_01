@@ -162,10 +162,9 @@ function Fruit(fruitType) {
 
     function liquidate() {
       for (var i = 0; i < fruitArray.length; i++) {
-        if (fruitArray[i].totalSold > 0) {
-          customer.currentCash = fruitArray[i].totalSold * fruitArray[i].currentPrice;
-          fruitArray[i].getAvgPrice = Number(fruitArray[i].getAvgPrice());
-          fruitArray[i].totalSold = 0;
+        if (customer[fruitArray[i].type] > 0) {
+          customer.currentCash += customer[fruitArray[i].type] * fruitArray[i].currentPrice;
+          customer[fruitArray[i].type] = 0;
           setStats(fruitArray[i]);
         }
       }
